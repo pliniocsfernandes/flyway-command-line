@@ -15,12 +15,11 @@
 # limitations under the License.
 #
 
-# Save current directory
-OLDDIR=`pwd`
-
 # Set the current directory to the installation directory
-INSTALLDIR=`dirname $0`
-cd "$INSTALLDIR"
+INSTALLDIR="/opt/flyway"
+
+# Set the migrations relative path to be used
+MIGRATIONS_PATH="db/migration"
 
 # Use JAVA_HOME if it is set
 if [ -z $JAVA_HOME ]; then
@@ -29,13 +28,13 @@ else
  JAVA_CMD=$JAVA_HOME/bin/java
 fi
 
-$JAVA_CMD -cp bin/flyway-commandline-1.7.jar:bin/flyway-core-1.7.jar:bin/spring-jdbc-2.5.6.jar:bin/commons-logging-1.1.1.jar:bin/spring-beans-2.5.6.jar:bin/spring-core-2.5.6.jar:bin/spring-context-2.5.6.jar:bin/aopalliance-1.0.jar:bin/spring-tx-2.5.6.jar:bin/log4j-1.2.16.jar:sql com.googlecode.flyway.commandline.Main $@
+#$JAVA_CMD -cp bin/flyway-commandline-1.7.jar:bin/flyway-core-1.7.jar:bin/spring-jdbc-2.5.6.jar:bin/commons-logging-1.1.1.jar:bin/spring-beans-2.5.6.jar:bin/spring-core-2.5.6.jar:bin/spring-context-2.5.6.jar:bin/aopalliance-1.0.jar:bin/spring-tx-2.5.6.jar:bin/log4j-1.2.16.jar:$path com.googlecode.flyway.commandline.Main $@
+FLYWAY_ARGS="-cp $INSTALLDIR/bin/flyway-commandline-1.7.jar:$INSTALLDIR/bin/flyway-core-1.7.jar:$INSTALLDIR/bin/spring-jdbc-2.5.6.jar:$INSTALLDIR/bin/commons-logging-1.1.1.jar:$INSTALLDIR/bin/spring-beans-2.5.6.jar:$INSTALLDIR/bin/spring-core-2.5.6.jar:$INSTALLDIR/bin/spring-context-2.5.6.jar:$INSTALLDIR/bin/aopalliance-1.0.jar:$INSTALLDIR/bin/spring-tx-2.5.6.jar:$INSTALLDIR/bin/log4j-1.2.16.jar"
+
+$JAVA_CMD $FLYWAY_ARGS:$MIGRATIONS_PATH com.googlecode.flyway.commandline.Main $@
 
 # Save the exit code
 JAVA_EXIT_CODE=$?
-
-# Restore current directory
-cd "$OLDDIR"
 
 # Exit using the same code returned from Java
 exit $JAVA_EXIT_CODE
